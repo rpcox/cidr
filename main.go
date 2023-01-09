@@ -45,20 +45,11 @@ func Int2Ip(integer int) string {
 	return strings.Join(s, ".")
 }
 
-func main() {
-	mask    := flag.Int("mask", 32, "Summarization mask")
-	version := flag.Bool("version", false, "Display version and exit")
-	flag.Parse()
-
-	if *version {
-		ShowVersion()
-	}
-
+func Summarize(mask int, file string) map[int]int {
 	c := make(map[int]int)
-	bitMask := ( 0xFFFFFFFF & ( 0xFFFFFFFF << (32 - *mask)))
+	bitMask := ( 0xFFFFFFFF & ( 0xFFFFFFFF << (32 - mask)))
 
-	list := flag.Args()
-	f, err := os.Open(list[0])
+	f, err := os.Open(file)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,6 +63,10 @@ func main() {
 	}
 	f.Close()
 
+	return c
+}
+
+func ShowSummary(c map[int]int, mask int) {
 	var keys []int
 	for k := range c {
 		keys = append(keys, k)
@@ -79,7 +74,31 @@ func main() {
 	sort.Ints(keys)
 
 	for _, v := range keys {
-		fmt.Fprintf(os.Stdout, "%6d\t-  %s/%d\n", c[v], Int2Ip(v), *mask)
+		fmt.Fprintf(os.Stdout, "%6d\t-  %s/%d\n", c[v], Int2Ip(v), mask)
 	}
-
 }
+
+func main() {
+	sumCmd   := flag.NewFlagSet("summarize", flag.ExitOnError)
+	sumMask  := sumCmd.Int("mask", 32, "Length of summarization mask")
+	rangeCmd := flag.NewFlagSet("to_range", flag.ExitOnError)
+	verCmd   := flag.NewFlagSet("version", flag.ExitOnError)
+
+	switch os.Args[1] {
+	case "to_range":
+		rangeCmd.Parse(os.Args[2:])
+		fmt.Println(rangeCmd.Args())
+	case "summarize":
+		sumCmd.Parse(os.Args[2:])
+		file := sumCmd.Args()
+		m := Summarize(*sumMask, file[0])
+		ShowSummary(m, *sumMask)
+	case "version":
+		verCmd.Parse(os.Args[2:])
+		ShowVersion()
+	default:
+		fmt.Println("Invalid selection")
+		os.Exit(1)
+	}
+}
+//SDG
