@@ -1,3 +1,3 @@
-module github.com/rpcox/summarize
+module github.com/rpcox/cidrcalc
 
 go 1.19
