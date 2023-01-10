@@ -1,3 +1,3 @@
-module github.com/rpcox/cidrcalc
+module github.com/rpcox/vlsm
 
 go 1.19
