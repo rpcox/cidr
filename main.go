@@ -166,11 +166,44 @@ func PrintSummary(c map[int]int, mask int) {
 	}
 }
 
+func PrintUsage() {
+	doc := `
+
+  NAME
+	vlsm - variable length subnet masking
+
+  SYNOPSIS
+	vlsm SUBCOMMAND [COMMAND OPTS] [COMMAND ARGS]
+
+  DESCRIPTION
+	vlsm is a tool variable length subnet masking
+
+    SUBCOMMANDS
+	summarize - summarize a list of IP addresses contained in a file. The -mask option
+        	is required.
+
+		Example: vlsm summarize -mask 23 myIPList.txt
+
+	to_range - take a subnet string in format IP/MASK and print the characteristics of
+		that subnet (i.e., first IP, last IP, etc)
+
+		Example: vlsm to_range 10.23.45.67/23
+`
+
+	fmt.Println(doc)
+}
+
 func main() {
 	sumCmd   := flag.NewFlagSet("summarize", flag.ExitOnError)
 	sumMask  := sumCmd.Int("mask", 32, "Length of summarization mask")
 	rangeCmd := flag.NewFlagSet("to_range", flag.ExitOnError)
 	verCmd   := flag.NewFlagSet("version", flag.ExitOnError)
+	flag.Parse()
+
+	if flag.Arg(1) == "" {
+		PrintUsage()
+		os.Exit(1)
+	}
 
 	switch os.Args[1] {
 	case "to_range":
@@ -190,6 +223,7 @@ func main() {
 		ShowVersion()
 	default:
 		fmt.Println("Invalid subcommand")
+		PrintUsage()
 		os.Exit(1)
 	}
 }
