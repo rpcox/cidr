@@ -13,7 +13,7 @@ import (
 )
 
 func ShowVersion() {
-	ver := "0.1.0"
+	ver := "0.1.1"
 	fmt.Fprintf(os.Stdout, "summarize v%s\n", ver)
 	os.Exit(0)
 }
