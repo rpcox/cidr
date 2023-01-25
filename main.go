@@ -13,7 +13,7 @@ import (
 )
 
 func ShowVersion() {
-	ver := "0.1.1"
+	ver := "0.1.2"
 	fmt.Fprintf(os.Stdout, "summarize v%s\n", ver)
 	os.Exit(0)
 }
@@ -198,9 +198,8 @@ func main() {
 	sumMask  := sumCmd.Int("mask", 32, "Length of summarization mask")
 	rangeCmd := flag.NewFlagSet("to_range", flag.ExitOnError)
 	verCmd   := flag.NewFlagSet("version", flag.ExitOnError)
-	flag.Parse()
 
-	if flag.Arg(1) == "" {
+	if flag.Arg(1) == "" && os.Args[1] != "version" {
 		PrintUsage()
 		os.Exit(1)
 	}
