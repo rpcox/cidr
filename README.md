@@ -16,7 +16,7 @@
 
 ### CIDR to range
 
-    > vlsm to_range 10.1.1.1/24 1.1.1.1/23
+    > vlsm range 10.1.1.1/24 1.1.1.1/23
 
      Submitted : 10.1.1.1/24
          Block : 10.1.1.0/24
