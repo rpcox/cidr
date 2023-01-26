@@ -184,10 +184,10 @@ func PrintUsage() {
 
 		Example: vlsm summarize -mask 23 myIPList.txt
 
-	to_range - take a subnet string in format IP/MASK and print the characteristics of
+	range - take a subnet string in format IP/MASK and print the characteristics of
 		that subnet (i.e., first IP, last IP, etc)
 
-		Example: vlsm to_range 10.23.45.67/23
+		Example: vlsm range 10.23.45.67/23
 `
 
 	fmt.Println(doc)
@@ -196,16 +196,16 @@ func PrintUsage() {
 func main() {
 	sumCmd   := flag.NewFlagSet("summarize", flag.ExitOnError)
 	sumMask  := sumCmd.Int("mask", 32, "Length of summarization mask")
-	rangeCmd := flag.NewFlagSet("to_range", flag.ExitOnError)
+	rangeCmd := flag.NewFlagSet("range", flag.ExitOnError)
 	verCmd   := flag.NewFlagSet("version", flag.ExitOnError)
 
-	if flag.Arg(1) == "" && os.Args[1] != "version" {
+	if len(os.Args) == 1 {
 		PrintUsage()
 		os.Exit(1)
 	}
 
 	switch os.Args[1] {
-	case "to_range":
+	case "range":
 		rangeCmd.Parse(os.Args[2:])
 		r := ToRange(rangeCmd.Args())
 		PrintRange(r)
